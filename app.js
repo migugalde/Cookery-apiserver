@@ -108,28 +108,43 @@ app.get('/getFood', function(req, res){
 	});
 });
 
-/* Get recipes for a username in db */
+/* Get recipes from external API and respond with parsed version
+   INPUT: HTTP request where food is a query element of foods delimited only by commas
+   OUTPUT: API JSON response in the form of 
+   	{
+   		count: Number of recipes in result (Max 30)
+		recipes: List of Recipe Parameters ->
+			[
+			{
+			image_url: URL of the image
+			source_url: Original Url of the recipe on the publisher's site
+			title: Title of the recipe
+			}
+			{
+			image_url: ____, 
+			source_url: ____, 
+			title:_____,
+			}
+			....
+			]
+	}
+	*/
 app.get('/getRecipes', function(req, res){
-	var username = req.query.username;
+	var food = req.query.food;
 	//var sampleUrl = "http://food2fork.com/api/search?key=61201e608a47665ae57fe1b61fb7777a&q=shredded%20chicken,pork";
 	var sampleUrl = "http://food2fork.com/api/search?key=61201e608a47665ae57fe1b61fb7777a&q=";
 	
-	var foodUrl = 'http://localhost:3001/getFood?username=' + username;
+	var foodUrl = sampleUrl + food;
 	request(foodUrl, function (error, response, body) {
 	    if (!error && response.statusCode == 200) {
-		var jsonObject = JSON.parse(body);
-		request(sampleUrl+jsonObject.foods, function (error, response, body) {
-		    if (!error && response.statusCode == 200) {
-			var jsonRecipes = JSON.parse(body);
-			var replacer = function(key, value) {
-				if(key == "image_url" || key == "f2f_url" || key == "publisher" || key == "publisher_url" || key == "social_rank" || key == "page" || key =="recipe_id") {
-					return undefined;
-				}
-				return value;
+		var replacer = function(key, value) {
+			if(key == "f2f_url" || key == "publisher" || key == "publisher_url" || key == "social_rank" || key == "page" || key =="recipe_id") {
+				return undefined;
 			}
-			res.json(JSON.stringify(jsonRecipes, replacer));
-		    }
-		});
+			return value;
+		}
+		var jsonRecipes = JSON.parse(body, replacer);
+		res.json(jsonRecipes);
 	    }
 	});
 });
