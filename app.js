@@ -1,3 +1,6 @@
+var API_URL = "https://my-cookery-api.herokuapp.com/"
+var APP_URl = "https://my-cookery.herokuapp.com/"
+
 var express = require('express')
 var bodyParser = require('body-parser');
 var request = require('request');
@@ -25,7 +28,7 @@ app.get('/addFood', function(req, res){
 		}
 	});
 	
-	var foodUrl = 'http://localhost:3001/getFood?username=' + username;
+	var foodUrl = API_URL + "/getFood?username=" + username;
 	request(foodUrl, function (error, response, body) {
 	    if (!error && response.statusCode == 200) {
 		var jsonObject = JSON.parse(body);
@@ -54,7 +57,7 @@ app.get('/removeFood', function(req, res){
 		}
 	});
 	
-	var foodUrl = 'http://localhost:3001/getFood?username=' + username;
+	var foodUrl = API_URL + "getFood?username=" + username;
 	request(foodUrl, function (error, response, body) {
 	    if (!error && response.statusCode == 200) {
 		var jsonObject = JSON.parse(body);
