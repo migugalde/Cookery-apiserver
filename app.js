@@ -29,7 +29,7 @@ app.get('/addFood', function(req, res){
 	request(foodUrl, function (error, response, body) {
 	    if (!error && response.statusCode == 200) {
 		var jsonObject = JSON.parse(body);
-		request(sampleUrl+jsonObject.foods, function (error, response, body) {
+		request(foodUrl+jsonObject.foods, function (error, response, body) {
 		    if (!error && response.statusCode == 200) {
 			res.json(body);
 		    }
@@ -58,7 +58,7 @@ app.get('/removeFood', function(req, res){
 	request(foodUrl, function (error, response, body) {
 	    if (!error && response.statusCode == 200) {
 		var jsonObject = JSON.parse(body);
-		request(sampleUrl+jsonObject.foods, function (error, response, body) {
+		request(foodUrl+jsonObject.foods, function (error, response, body) {
 		    if (!error && response.statusCode == 200) {
 			res.json(body);
 		    }
